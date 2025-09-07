@@ -1,0 +1,51 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html,
+body {
+  background: transparent; /* deja ver el Iridescence */
+  margin: 0;
+  padding: 0;
+  height: 100%;
+}
+
+/* Accesibilidad: focus visible consistente */
+:root { color-scheme: light dark; }
+* { outline: none; }
+*:focus-visible {
+  @apply ring-2 ring-offset-2 ring-indigo-500 ring-offset-white/80 rounded-md;
+}
+
+/* Utilidad visual compartida para shells */
+@layer utilities {
+  .glass {
+    /* Asegurar posicionamiento correcto */
+    position: relative;
+    z-index: 1;
+    
+    /* Tu gradiente original */
+    background: radial-gradient(
+      76.66% 88.7% at 50% 11.3%, 
+      rgba(255,255,255,0.96) 95%, 
+      rgba(255,255,255,0.82) 100%
+    );
+    
+    /* Efectos visuales */
+    @apply backdrop-blur-md border border-white/20 shadow-2xl shadow-black/10;
+    
+    /* Crear nuevo contexto de apilamiento */
+    isolation: isolate;
+    
+    /* Asegurar que no sea transparente a los eventos */
+    pointer-events: auto;
+  }
+  
+  /* Variante oscura opcional */
+  @media (prefers-color-scheme: dark) {
+    .glass {
+      background: rgba(17, 17, 17, 0.95);
+      @apply border-white/10 shadow-white/5;
+    }
+  }
+}
