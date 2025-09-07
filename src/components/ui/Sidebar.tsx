@@ -1,4 +1,4 @@
-// src/components/ui/Sidebar.tsx
+// Sidebar.tsx
 'use client';
 
 interface SidebarProps {
@@ -22,7 +22,7 @@ export default function Sidebar({ isExpanded, onToggle }: SidebarProps) {
       }}
       style={{
         backgroundColor: 'white',
-        width: isExpanded ? '240px' : '88px',
+        width: isExpanded ? '240px' : '88px', // Ancho expandido vs colapsado
         minWidth: isExpanded ? '240px' : '88px',
         position: 'fixed',
         left: '12px',
