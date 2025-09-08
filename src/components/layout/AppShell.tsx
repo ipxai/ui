@@ -1,7 +1,7 @@
 // src/components/layout/AppShell.tsx
 'use client';
 import { useState } from 'react';
-import Sidebar from '../ui/Sidebar';
+import Sidebar from '../ui/sidebar/Sidebar';
 import Content from '../ui/Content';
 import Iridescence from '../animations/Iridescence';
 

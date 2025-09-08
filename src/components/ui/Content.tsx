@@ -21,7 +21,7 @@ export default function Content({ isExpanded, children }: ContentProps) {
         flexGrow: 1,
         zIndex: 10,
         backdropFilter: 'blur(10px)',
-        background: 'radial-gradient(86% 100% at 50% 11.3%, #fffffff6 90%, #ffffff80)',
+        background: 'radial-gradient(86% 100% at 50% 11.3%, #fffffffe 90%, #ffffff80)',
         overflow: 'auto',
         height: '96vh',
         transition: 'all .3s cubic-bezier(.215,.61,.355,1)',

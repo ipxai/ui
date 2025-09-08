@@ -1,7 +1,9 @@
 
 // src/app/layout.tsx
+// src/app/layout.tsx
 import './globals.css';
 import { Public_Sans } from 'next/font/google';
+import { GoogleOAuthProvider } from "@react-oauth/google";
 
 const publicSans = Public_Sans({ subsets: ['latin'] });
 
@@ -13,7 +15,11 @@ export const metadata = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="es">
-      <body className={publicSans.className}>{children}</body>
+      <body className={publicSans.className}>
+        <GoogleOAuthProvider clientId={process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID!}>
+          {children}
+        </GoogleOAuthProvider>
+      </body>
     </html>
   );
 }
