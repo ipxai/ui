@@ -1,8 +1,6 @@
-// src/components/layout/AppShell.tsx
 'use client';
 import { useState } from 'react';
 import Sidebar from '../ui/sidebar/Sidebar';
-import Content from '../ui/Content';
 import Iridescence from '../animations/Iridescence';
 
 interface AppShellProps {
@@ -21,8 +19,8 @@ export default function AppShell({ children }: AppShellProps) {
   };
 
   return (
-    <div className="relative h-screen overflow-hidden">
-      {/* Background Iridescence */}
+    <div className="relative h-screen w-full">
+      {/* Background */}
       <div className="absolute inset-0 z-0">
         <Iridescence
           colors={[
@@ -35,7 +33,7 @@ export default function AppShell({ children }: AppShellProps) {
         />
       </div>
 
-      {/* Hover area para el sidebar */}
+      {/* Sidebar (área de hover) */}
       <div
         onMouseEnter={handleMouseEnter}
         onMouseLeave={handleMouseLeave}
@@ -49,16 +47,22 @@ export default function AppShell({ children }: AppShellProps) {
           pointerEvents: 'auto',
         }}
       >
-        <Sidebar 
-          isExpanded={isSidebarExpanded} 
-          onToggle={() => {}}
+        <Sidebar
+          isExpanded={isSidebarExpanded}
+          onToggle={() => setIsSidebarExpanded(!isSidebarExpanded)}
         />
       </div>
 
-      {/* Content */}
-      <Content isExpanded={isSidebarExpanded}>
+      {/* Contenedor para el Content (ajusta su posición) */}
+      <div
+        style={{
+          marginLeft: isSidebarExpanded ? '264px' : '100px',
+          width: `calc(100vw - ${isSidebarExpanded ? '264px' : '100px'})`,
+          transition: 'margin-left 0.3s ease, width 0.3s ease',
+        }}
+      >
         {children}
-      </Content>
+      </div>
     </div>
   );
 }

@@ -4,7 +4,6 @@
 
 html,
 body {
- 
   margin: 0;
   padding: 0;
   height: 100%;
@@ -44,4 +43,12 @@ body {
     /* Asegurar que no sea transparente a los eventos */
     pointer-events: auto;
   }
+}
+
+/* 🚫 Eliminar completamente la línea azul/morada del input */
+input:focus,
+input:focus-visible {
+  outline: none !important;
+  border: none !important;
+  box-shadow: none !important;
 }

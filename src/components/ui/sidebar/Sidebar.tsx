@@ -25,8 +25,8 @@ export default function Sidebar({ isExpanded, onToggle }: SidebarProps) {
       }}
       initial={false}
       animate={{
-        width: isExpanded ? '240px' : '88px',
-        minWidth: isExpanded ? '240px' : '88px',
+        width: isExpanded ? '264px' : '88px', // <-- Ajustado a 264px
+        minWidth: isExpanded ? '264px' : '88px',
       }}
       transition={{
         type: 'spring',
