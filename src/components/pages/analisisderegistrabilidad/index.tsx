@@ -131,55 +131,114 @@ export default function AnalisisRegistrabilidad({ isExpanded }: AnalisisRegistra
 
         {/* Resultados */}
         {results && (
-          <div className="bg-white rounded-2xl shadow-xl border border-gray-100 p-6">
-            <h2 className="text-xl font-semibold text-gray-900 mb-6">
-              Resultado del Análisis
-            </h2>
-            
+          <div className="space-y-8">
             {results.results && results.results.length > 0 && (
-              <div className="space-y-6">
-                {results.results.map((result: any, index: number) => (
-                  <div key={index} className="space-y-4">
-                    {/* Header con la marca analizada */}
-                    <div className="bg-gradient-to-r from-purple-50 to-pink-50 border-purple-200 rounded-xl p-4 border">
-                      <h3 className="text-lg font-semibold text-purple-900 mb-2">
-                        Análisis para: "{result.promptId}"
-                      </h3>
+              <>
+                {results.results.map((result: any, index: number) => {
+                  // Extraer secciones del texto
+                  const sections = result.generated_text.split('##').slice(1);
+                  const veredicto = sections[0]?.includes('No registrable') ? 'negative' : 
+                                   sections[0]?.includes('Registrable') ? 'positive' : 'neutral';
+                  
+                  return (
+                    <div key={index} className="space-y-8">
+                      
+                      {/* Header con veredicto - Más compacto */}
+                      <div className={`rounded-3xl p-8 border-2 shadow-xl ${
+                        veredicto === 'negative' 
+                          ? 'bg-gradient-to-br from-red-50 via-pink-25 to-red-25 border-red-200' 
+                          : veredicto === 'positive'
+                          ? 'bg-gradient-to-br from-green-50 via-emerald-25 to-green-25 border-green-200'
+                          : 'bg-gradient-to-br from-blue-50 via-indigo-25 to-blue-25 border-blue-200'
+                      }`}>
+                        <div className="text-center space-y-4">
+                          <div className={`w-20 h-20 mx-auto rounded-full flex items-center justify-center text-4xl shadow-lg ${
+                            veredicto === 'negative' ? 'bg-red-100 border-4 border-red-200' : 
+                            veredicto === 'positive' ? 'bg-green-100 border-4 border-green-200' : 'bg-blue-100 border-4 border-blue-200'
+                          }`}>
+                            {veredicto === 'negative' ? '🚫' : 
+                             veredicto === 'positive' ? '✅' : '🔍'}
+                          </div>
+                          <div>
+                            <h3 className="text-3xl font-bold text-gray-900 mb-3">
+                              Marca "{result.promptId}"
+                            </h3>
+                            <div className={`inline-flex items-center px-6 py-3 rounded-full text-lg font-bold shadow-lg ${
+                              veredicto === 'negative'
+                                ? 'bg-red-500 text-white'
+                                : veredicto === 'positive' 
+                                ? 'bg-green-500 text-white'
+                                : 'bg-blue-500 text-white'
+                            }`}>
+                              {veredicto === 'negative' ? 'NO REGISTRABLE' : 
+                               veredicto === 'positive' ? 'REGISTRABLE' : 'EN ANÁLISIS'}
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* Grid de análisis - 2 columnas para evitar scroll */}
+                      <div className="grid lg:grid-cols-2 gap-6">
+                        {sections.map((section: string, secIndex: number) => {
+                          const lines = section.trim().split('\n');
+                          const title = lines[0]?.replace(/^\d+_/, '').replace(/_/g, ' ').trim();
+                          const content = lines.slice(1).join('\n').trim();
+                          
+                          if (!title || !content) return null;
+                          
+                          // Iconos y colores mejorados
+                          const getSectionConfig = (title: string) => {
+                            if (title.includes('veredicto')) return { icon: '⚖️', color: 'from-purple-400 to-purple-600', bg: 'from-purple-50 to-purple-100', border: 'border-purple-200' };
+                            if (title.includes('clase')) return { icon: '📋', color: 'from-blue-400 to-blue-600', bg: 'from-blue-50 to-blue-100', border: 'border-blue-200' };
+                            if (title.includes('distintividad')) return { icon: '🎯', color: 'from-orange-400 to-orange-600', bg: 'from-orange-50 to-orange-100', border: 'border-orange-200' };
+                            if (title.includes('prohibiciones absolutas')) return { icon: '🚫', color: 'from-red-400 to-red-600', bg: 'from-red-50 to-red-100', border: 'border-red-200' };
+                            if (title.includes('prohibiciones relativas')) return { icon: '⚠️', color: 'from-yellow-400 to-yellow-600', bg: 'from-yellow-50 to-yellow-100', border: 'border-yellow-200' };
+                            if (title.includes('normativa')) return { icon: '📖', color: 'from-indigo-400 to-indigo-600', bg: 'from-indigo-50 to-indigo-100', border: 'border-indigo-200' };
+                            if (title.includes('conclusion')) return { icon: '💡', color: 'from-green-400 to-green-600', bg: 'from-green-50 to-green-100', border: 'border-green-200' };
+                            return { icon: '📄', color: 'from-gray-400 to-gray-600', bg: 'from-gray-50 to-gray-100', border: 'border-gray-200' };
+                          };
+
+                          const config = getSectionConfig(title);
+
+                          return (
+                            <div key={secIndex} className={`bg-gradient-to-br ${config.bg} border-2 ${config.border} rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden`}>
+                              {/* Header de la sección */}
+                              <div className={`bg-gradient-to-r ${config.color} px-6 py-4`}>
+                                <div className="flex items-center gap-3">
+                                  <span className="text-2xl bg-white/20 rounded-full w-10 h-10 flex items-center justify-center">
+                                    {config.icon}
+                                  </span>
+                                  <h4 className="text-lg font-bold text-white capitalize truncate">
+                                    {title}
+                                  </h4>
+                                </div>
+                              </div>
+                              
+                              {/* Contenido de la sección */}
+                              <div className="p-6">
+                                <div 
+                                  className="prose prose-sm max-w-none text-gray-700 leading-relaxed text-sm"
+                                  dangerouslySetInnerHTML={{
+                                    __html: content
+                                      .replace(/\*\*(.*?)\*\*/g, '<strong class="font-semibold text-gray-900 bg-white/70 px-1 py-0.5 rounded text-xs">$1</strong>')
+                                      .replace(/^- /gm, '• ')
+                                      .replace(/\n\n/g, '<br><br>')
+                                      .replace(/\n/g, '<br>')
+                                      .replace(/Clase\s+(\d+)/g, '<span class="bg-blue-500 text-white px-2 py-1 rounded-full text-xs font-bold">Clase $1</span>')
+                                      .replace(/Art\.\s+(\d+)/g, '<span class="bg-purple-500 text-white px-2 py-1 rounded-full text-xs font-bold">Art. $1</span>')
+                                      .slice(0, 800) + (content.length > 800 ? '...' : '') // Limitar texto para evitar scroll excesivo
+                                  }}
+                                />
+                              </div>
+                            </div>
+                          );
+                        })}
+                      </div>
                     </div>
-                    
-                    {/* Contenido del análisis parseado */}
-                    <div className="prose max-w-none">
-                      <div 
-                        className="bg-gray-50 rounded-lg p-6 text-gray-800 leading-relaxed"
-                        dangerouslySetInnerHTML={{
-                          __html: result.generated_text
-                            .replace(/# /g, '<h1 class="text-2xl font-bold text-gray-900 mb-4 mt-6">')
-                            .replace(/## /g, '<h2 class="text-xl font-semibold text-gray-800 mb-3 mt-5">')
-                            .replace(/\*\*(.*?)\*\*/g, '<strong class="font-semibold text-gray-900">$1</strong>')
-                            .replace(/- \*\*(.*?)\*\*/g, '<li class="mb-2"><strong class="font-semibold text-gray-900">$1</strong>')
-                            .replace(/^- /gm, '<li class="mb-1">')
-                            .replace(/\n\n/g, '</p><p class="mb-4">')
-                            .replace(/^([^<])/gm, '<p class="mb-4">$1')
-                            .replace(/([^>])$/gm, '$1</p>')
-                        }}
-                      />
-                    </div>
-                  </div>
-                ))}
-              </div>
+                  );
+                })}
+              </>
             )}
-            
-            {/* Respuesta cruda como fallback */}
-            <details className="mt-6">
-              <summary className="cursor-pointer text-sm text-gray-500 hover:text-gray-700">
-                Ver respuesta completa (JSON)
-              </summary>
-              <div className="mt-3 bg-gray-100 rounded-lg p-4">
-                <pre className="text-xs text-gray-600 whitespace-pre-wrap overflow-x-auto">
-                  {JSON.stringify(results, null, 2)}
-                </pre>
-              </div>
-            </details>
           </div>
         )}
       </div>
