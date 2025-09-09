@@ -1,7 +1,7 @@
 'use client';
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Globe, BookOpen } from 'lucide-react';
+import { Globe, BookOpen, Search } from 'lucide-react';
 import Avatar from 'boring-avatars';
 
 interface NavigationMenuProps {
@@ -18,6 +18,13 @@ export default function NavigationMenu({ isExpanded }: NavigationMenuProps) {
       icon: <Globe size={32} strokeWidth={1.10} />,
       name: 'Descubre',
       href: '/descubre'
+    },
+    {
+      id: 'analisis-registrabilidad',
+      label: 'Analiza tu marca',
+      icon: <Search size={32} strokeWidth={1.10} />,
+      name: 'Analiza tu marca',
+      href: '/analisis-de-registrabilidad'
     },
     {
       id: 'faqs',
